@@ -30,7 +30,26 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 # Your goal is to write the score method.
 
 def score(dice)
-  # You need to write this method
+  #variable declarations
+  triplePattern = /(\d)\1\1/
+  @score = 0
+
+  dice_str = dice.sort.join.to_s # Puts in the form "#####"
+
+  #TRIPLES
+  if triple = triplePattern.match(dice_str) # If there is a match of three consecutive numbers
+    @score = triple[1].to_i*100 # Score = 100*matched number
+    @score = 1000 if @score == 100 # Account for "111" = 1000 points
+    dice_str.sub!(triplePattern, "") # Remove the found triple
+  end
+
+  #SINGLES
+  for i in (0..dice_str.length-1)
+    @score+=100 if dice_str[i] == "1"
+    @score+=50 if dice_str[i] == "5"
+  end
+
+  @score
 end
 
 class AboutScoringProject < Neo::Koan
